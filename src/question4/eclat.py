@@ -77,8 +77,8 @@ def eclat(data, min_sup):
     l = [l1]
     k = 1
     while True:
-        print('Running Eclat: the %i-th iteration with %i itemsets in l%i...' % (k, len(l[-1]), k))
         k += 1
+        print("generate: " + str(k))
         # @ZH lk, support_k = generate_lk(l[-1], k, support_list, number_of_transactions, min_sup)
         # (last_lk, k, min_sup_, number_of_transactions, sup_list):
         lk, support_k = generate_lk(l[-1], k, min_sup, number_of_transactions, support_list)
@@ -86,8 +86,6 @@ def eclat(data, min_sup):
             for elements in l:
                 for element in elements:
                     result.append(element)
-
-            print('Running Eclat: the %i-th iteration. Terminating ...' % (k - 1))
             break
         else:
             l.append(lk)

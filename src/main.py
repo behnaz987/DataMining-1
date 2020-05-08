@@ -3,6 +3,7 @@ import time
 from src.question1.code import find_transactions_items
 from src.question2.code import find_similar_items
 from src.question4.eclat import run_eclat
+from src.question5.generate_rules import generate_rules_and_save_rules
 # import re
 # import numpy as np
 # import matplotlib.pyplot as plt
@@ -120,12 +121,18 @@ if __name__ == '__main__':
     # print("time for question 2")
     # print(time.time() - start)
     # print("________________________________________________")
-    print("question4")
+    # print("question4")
+    # start = time.time()
+    # run_eclat(0.02)
+    # print("time for question 4")
+    # print(time.time() - start)
+    # print("________________________________________________")
+    print("question5")
     start = time.time()
-    run_eclat(0.02)
-    print("time for question 4")
+    generate_rules_and_save_rules(0.7, 0.02)
     print(time.time() - start)
     print("________________________________________________")
+
 
 
 
