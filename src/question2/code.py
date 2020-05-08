@@ -56,8 +56,10 @@ def find_similar_items():
                     similar_items[base_of_keys[row["StockCode"]]["key"]] += int(row['Quantity'])
                     total += int(row['Quantity'])
                     continue
-
-            base_of_keys[row["StockCode"][:-1]] = {"key": row["StockCode"], "Description": row["Description"]}
+            if str(row["StockCode"])[-1].isalpha():
+                base_of_keys[row["StockCode"][:-1]] = {"key": row["StockCode"], "Description": row["Description"]}
+            else:
+                base_of_keys[row["StockCode"]] = {"key": row["StockCode"], "Description": row["Description"]}
             similar_items[row["StockCode"]] = int(row['Quantity'])
             total += int(row['Quantity'])
         items_frequency = find_items_frequency(total, similar_items)

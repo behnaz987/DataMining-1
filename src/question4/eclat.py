@@ -122,7 +122,7 @@ def save_results(results, support_list):
             writer.writerow(value)
 
 
-def run_eclat(min_sup =0 ):
+def run_eclat(min_sup=0):
     data = read_data()
     print("run eclat")
     print("___________________________________________________")
