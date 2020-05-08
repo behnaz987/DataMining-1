@@ -107,15 +107,15 @@ def read_data():
     return data
 
 
-def save_results(results, support_list):
+def save_results(results, support_list, min_sup):
     print("run_save_result")
     print("___________________________________________________")
-    with open('question4/result.csv', 'w', newline='') as out:
+    with open('question4/result' + str(min_sup) + '.csv', 'w', newline='') as out:
         writer = csv.writer(out)
         for result in results:
             writer.writerow(result)
 
-    with open('question4/supports.csv', 'w', newline='') as out:
+    with open('question4/supports' + str(min_sup) + '.csv', 'w', newline='') as out:
         writer = csv.writer(out)
         for support, value in support_list.items():
             writer.writerow(support)
@@ -126,5 +126,5 @@ def run_eclat(min_sup=0):
     data = read_data()
     print("run eclat")
     print("___________________________________________________")
-    results, support_list = eclat(data, 0.02)
-    save_results(results, support_list)
+    results, support_list = eclat(data, min_sup)
+    save_results(results, support_list, min_sup)
