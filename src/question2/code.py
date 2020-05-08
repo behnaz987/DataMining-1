@@ -33,10 +33,17 @@ def save_result_to_file(items):
             writer.writerow(item)
 
 
+def save_to_file_for_eclat(items):
+    with open('question2/for_eclat.csv', 'w', newline='') as out:
+        writer = csv.writer(out)
+        for item in items:
+            writer.writerow(item)
+
 def find_similar_items():
     with open('Online_Shopping_edit.csv', 'r') as inp:
         reader = csv.DictReader(inp, delimiter=',')
         similar_items = {}
+        similar_items2 = {}
         base_of_keys = dict()
         total = 0
         for row in reader:
@@ -46,6 +53,7 @@ def find_similar_items():
                 if base_of_keys[row["StockCode"][:-1]]["key"] == row["StockCode"] or \
                         similarity_of_description(base_of_keys[row["StockCode"][:-1]]["Description"].split(" "),
                                                   row["Description"].split(" ")):
+                    similar_items2[base_of_keys[row["StockCode"][:-1]]["key"]].append(row["InvoiceNo"])
                     similar_items[base_of_keys[row["StockCode"][:-1]]["key"]] += int(row['Quantity'])
                     total += int(row['Quantity'])
                     continue
@@ -53,6 +61,7 @@ def find_similar_items():
                 if base_of_keys[row["StockCode"]]["key"] == row["StockCode"] or \
                         similarity_of_description(base_of_keys[row["StockCode"]]["Description"].split(" "),
                                                   row["Description"].split(" ")):
+                    similar_items2[base_of_keys[row["StockCode"]]["key"]].append(row["InvoiceNo"])
                     similar_items[base_of_keys[row["StockCode"]]["key"]] += int(row['Quantity'])
                     total += int(row['Quantity'])
                     continue
@@ -60,9 +69,13 @@ def find_similar_items():
                 base_of_keys[row["StockCode"][:-1]] = {"key": row["StockCode"], "Description": row["Description"]}
             else:
                 base_of_keys[row["StockCode"]] = {"key": row["StockCode"], "Description": row["Description"]}
+
+            similar_items2[row["StockCode"]] = [row["InvoiceNo"]]
+
             similar_items[row["StockCode"]] = int(row['Quantity'])
             total += int(row['Quantity'])
         items_frequency = find_items_frequency(total, similar_items)
         draw_chart(items_frequency)
         save_result_to_file(list(zip(similar_items.keys(), similar_items.values(), items_frequency.values())))
+        save_to_file_for_eclat(list(similar_items2.values()))
         return list(zip(similar_items.keys(), similar_items.values()))

@@ -98,7 +98,7 @@ def read_data():
     print("read_input_file")
     print("___________________________________________________")
     data = []
-    with open('question1/transactions_items.csv', 'r') as inp:
+    with open('question2/for_eclat.csv', 'r') as inp:
         reader = csv.reader(inp, delimiter=',')
         for row in reader:
             data.append(row)
