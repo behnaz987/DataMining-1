@@ -113,19 +113,19 @@ if __name__ == '__main__':
     # find_transactions_items()
     # print("time for question 1")
     # print(time.time()-start)
-    # print("________________________________________________")
-    # print("question2")
-    # start = time.time()
-    # find_similar_items()
-    # print("time for question 2")
-    # print(time.time() - start)
-    # print("________________________________________________")
-    print("question4")
+    print("________________________________________________")
+    print("question2")
     start = time.time()
-    run_eclat()
-    print("time for question 4")
+    find_similar_items()
+    print("time for question 2")
     print(time.time() - start)
     print("________________________________________________")
-
-
+    # print("question4")
+    # start = time.time()
+    # run_eclat()
+    # print("time for question 4")
+    # print(time.time() - start)
+    # print("________________________________________________")
+    #
+    #
 

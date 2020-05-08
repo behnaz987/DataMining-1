@@ -14,7 +14,7 @@ def similarity_of_description(des1, des2):
 def find_items_frequency(total, similar_items: dict):
     items_frequency = {}
     for key, value in similar_items.items():
-        items_frequency[str(key)] = (int(value) / total)*100
+        items_frequency[str(key)] = (int(value) / total) * 100
     return items_frequency
 
 
@@ -47,6 +47,13 @@ def find_similar_items():
                         similarity_of_description(base_of_keys[row["StockCode"][:-1]]["Description"].split(" "),
                                                   row["Description"].split(" ")):
                     similar_items[base_of_keys[row["StockCode"][:-1]]["key"]] += int(row['Quantity'])
+                    total += int(row['Quantity'])
+                    continue
+            if row["StockCode"] in base_of_keys.keys():
+                if base_of_keys[row["StockCode"]]["key"] == row["StockCode"] or \
+                        similarity_of_description(base_of_keys[row["StockCode"]]["Description"].split(" "),
+                                                  row["Description"].split(" ")):
+                    similar_items[base_of_keys[row["StockCode"]]["key"]] += int(row['Quantity'])
                     total += int(row['Quantity'])
                     continue
 
