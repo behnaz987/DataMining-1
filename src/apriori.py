@@ -56,7 +56,7 @@ def apriori(data, min_support):
     L = [L1]
     k = 1
 
-    while (True):
+    while True:
         print('Running Apriori: the %i-th iteration with %i candidates...' % (k, len(CK)))
         k += 1
         CK = compute_CK(LK_=L[-1], k=k)

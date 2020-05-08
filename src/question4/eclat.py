@@ -1,4 +1,5 @@
 import csv
+from utils import and_two_list
 
 
 def convert_horizontal_to_vertical(transactions_items, number_of_transactions):
@@ -39,36 +40,37 @@ def generate_l1(vertical_data, id_item, number_of_transactions, min_sup):
     return sorted(list(map(frozenset, sorted(l1)))), support_list
 
 
-def generate_lk(last_lk, k, min_sup_, number_of_transactions, sup_list):
+def generate_lk(last_lk, k, min_sup, number_of_transactions, sup_list):
     lk = []
     support_list_k = {}
-    try:
-        for i in range(len(last_lk)):
-            for j in range(i + 1, len(last_lk)):
-                l1 = sorted(list(last_lk[i])[:k - 2])
-                l2 = sorted(list(last_lk[j])[:k - 2])
-                if l1 == l2:
-                    s1 = set(sup_list[last_lk[i]])
-                    s2 = set(sup_list[last_lk[j]])
-                    s1_and_s2 = list(s1 & s2)
-                    sup = 0
-                    for i in range(len(s1_and_s2)):
-                        if s1_and_s2[i] == 1:
-                            sup += 1
-                    if (sup / number_of_transactions) >= min_sup_:
-                        l1 = set(l1)
-                        l2 = set(l2)
-                        new = l1.union(l2)
-                        if new not in lk:
-                            # @ZH support_list_k[new] = sup
-                            support_list_k[new] = sup
-                            lk.append(new)
+    for i in range(len(last_lk)):
+        for j in range(i + 1, len(last_lk)):
+            l1 = sorted(list(last_lk[i])[:k - 2])
+            l2 = sorted(list(last_lk[j])[:k - 2])
+            if l1 == l2:
+                # @ZH s1 = set(sup_list[last_lk[i]])
+                # @ZH s2 = set(sup_list[last_lk[j]])
+                s1 = sup_list[last_lk[i]]
+                s2 = sup_list[last_lk[j]]
+                s1_and_s2 = and_two_list(s1, s2)
+                sup = sum(s1_and_s2)
+                if (sup / number_of_transactions) >= min_sup:
+                    # @ZH l1 = set(l1)
+                    # @ZH l2 = set(l2)
+                    l1 = set(sorted(list(last_lk[i])))
+                    l2 = set(sorted(list(last_lk[j])))
+                    new = l1.union(l2)
+                    if new not in lk:
+                        # @ZH support_list_k[new] = sup
+                        support_list_k[frozenset(new)] = s1_and_s2
+                        # @ ZH lk.append(new)
+                        lk.append(frozenset(new))
 
-        return sorted(list(map(frozenset, sorted(lk)))), support_list_k
-    except Exception as e:
-        print("AAAAAAAAAAAA")
+    return sorted(lk), support_list_k
+
 
 def eclat(data, min_sup):
+    result = []
     number_of_transactions = (len(data))
     vertical_data, id_item = convert_horizontal_to_vertical(data, number_of_transactions)
     l1, support_list = generate_l1(vertical_data, id_item, number_of_transactions, min_sup)
@@ -77,23 +79,52 @@ def eclat(data, min_sup):
     while True:
         print('Running Eclat: the %i-th iteration with %i itemsets in l%i...' % (k, len(l[-1]), k))
         k += 1
-        lk, support_k = generate_lk(l[-1], k, support_list, number_of_transactions, min_sup)
-
+        # @ZH lk, support_k = generate_lk(l[-1], k, support_list, number_of_transactions, min_sup)
+        # (last_lk, k, min_sup_, number_of_transactions, sup_list):
+        lk, support_k = generate_lk(l[-1], k, min_sup, number_of_transactions, support_list)
         if len(lk) == 0:
-            l = [sorted([tuple(sorted(itemset)) for itemset in lk]) for LK in l]
-            # support_list = dict((tuple(sorted(k)), np.sum(v)) for k, v in support_list.items())
+            for elements in l:
+                for element in elements:
+                    result.append(element)
+
             print('Running Eclat: the %i-th iteration. Terminating ...' % (k - 1))
             break
         else:
             l.append(lk)
+            # print(support_k)
             support_list.update(support_k)
-    return l, support_list
+    return sorted(result), support_list
 
 
-def run_eclat():
-    with open('question1/test.csv', 'r') as inp:
+def read_data():
+    print("read_input_file")
+    print("___________________________________________________")
+    data = []
+    with open('question1/transactions_items.csv', 'r') as inp:
         reader = csv.reader(inp, delimiter=',')
-        data = []
         for row in reader:
             data.append(row)
-        print(eclat(data, 0.02))
+    return data
+
+
+def save_results(results, support_list):
+    print("run_save_result")
+    print("___________________________________________________")
+    with open('question4/result.csv', 'w', newline='') as out:
+        writer = csv.writer(out)
+        for result in results:
+            writer.writerow(result)
+
+    with open('question4/supports.csv', 'w', newline='') as out:
+        writer = csv.writer(out)
+        for support, value in support_list.items():
+            writer.writerow(support)
+            writer.writerow(value)
+
+
+def run_eclat(min_sup =0 ):
+    data = read_data()
+    print("run eclat")
+    print("___________________________________________________")
+    results, support_list = eclat(data, 0.02)
+    save_results(results, support_list)
