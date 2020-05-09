@@ -39,6 +39,7 @@ def save_to_file_for_eclat(items):
         for item in items:
             writer.writerow(item)
 
+
 def find_similar_items():
     with open('Online_Shopping_edit.csv', 'r') as inp:
         reader = csv.DictReader(inp, delimiter=',')

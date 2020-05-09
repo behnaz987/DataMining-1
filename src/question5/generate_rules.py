@@ -57,8 +57,10 @@ def save_rules(rules):
 
 
 def calculate_confidence(s1, s2, data_frequency_list):
-    return sum(data_frequency_list[frozenset(s2)]) / sum(data_frequency_list[frozenset(s1)])
-
+    try:
+        return sum(data_frequency_list[frozenset(s2)]) / sum(data_frequency_list[frozenset(s1)])
+    except:
+        return 0
 
 def prepare_data(min_sup):
     if not path.exists('question4/result' + str(min_sup) + '.csv'):
